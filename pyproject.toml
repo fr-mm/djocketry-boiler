@@ -5,7 +5,7 @@ description = "Boilerplate for Django-Docker-Poetry projects"
 authors = ["Chico Moura"]
 
 [tool.poetry.dependencies]
-python = "3.10.6"
+python = "^3.10.6"
 Django = "^4.1"
 
 [tool.poetry.dev-dependencies]
