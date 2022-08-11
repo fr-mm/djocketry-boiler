@@ -67,13 +67,13 @@ class File:
         with open(self.path, 'r') as file:
             return file.read()
 
-    def replace(self, old: str, new: str) -> None:
+    def replace_substrings(self, old: str, new: str) -> None:
         new_content = re.sub(old, new, self.content)
-        self.__override(new_content)
+        self.override_content(new_content)
 
-    def __override(self, content: str) -> None:
+    def override_content(self, new_content: str) -> None:
         with open(self.path, 'w') as file:
-            file.write(content)
+            file.write(new_content)
 
 
 class DefaultFile:
@@ -91,7 +91,7 @@ class DefaultFile:
 
     def replace_project_name(self) -> None:
         if self.__replacement_allowed():
-            self.__file.replace(old=OLD_NAME, new=self.__new_project_name)
+            self.__file.replace_substrings(old=OLD_NAME, new=self.__new_project_name)
             print(f'{self.__file.name} edited')
 
     def __replacement_allowed(self) -> bool:
@@ -138,14 +138,14 @@ class PyprojectToml:
     def replace_string_attribute(self, key: str, value: str) -> None:
         pattern = fr'{key} ?= ?".*"'
         substitution = fr'{key} = "{value}"'
-        self.__file.replace(pattern, substitution)
+        self.__file.replace_substrings(pattern, substitution)
 
     def replace_list_attribute(self, key: str, value: List[str]) -> None:
         formatted_items = [f'"{item.strip()}"' for item in value]
         formatted_value = f'[{", ".join(formatted_items)}]'
         pattern = fr'{key} ?= ?\[.*\]'
         substitution = fr'{key} = {formatted_value}'
-        self.__file.replace(pattern, substitution)
+        self.__file.replace_substrings(pattern, substitution)
 
 
 class SetUp:
@@ -153,9 +153,15 @@ class SetUp:
 
     def execute(self) -> None:
         self.__project = Project.from_input()
+        self.__clear_readme()
         self.__edit_default_files()
         self.__edit_pyproject_toml()
         self.__rename_directories()
+
+    @staticmethod
+    def __clear_readme() -> None:
+        readme = File('README.md')
+        readme.override_content(new_content='')
 
     def __edit_pyproject_toml(self) -> None:
         pyproject_toml = PyprojectToml()
