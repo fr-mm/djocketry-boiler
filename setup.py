@@ -180,20 +180,22 @@ class SetUp:
         [file.replace_project_name() for file in files]
 
     def __rename_directories(self) -> None:
-        old_parent = Path(__file__).parent
-        new_parent = old_parent.parent.joinpath(self.__project.name)
         os.rename(OLD_NAME, self.__project.name)
-        os.rename(old_parent, new_parent)
-        os.chdir(new_parent)
-        print('Directories renamed')
-        self.__move_to_new_directory(new_parent)
+        parent = Path(__file__).parent
+        print('Child directory renamed')
+        if parent.name is OLD_NAME:
+            new_parent = parent.parent.joinpath(self.__project.name)
+            os.rename(parent, new_parent)
+            os.chdir(new_parent)
+            print('Parent directory renamed')
+            self.__move_to_new_directory(new_parent)
 
     @staticmethod
     def __move_to_new_directory(path: Path) -> None:
         shell: bytes = subprocess.run('echo $SHELL', shell=True, capture_output=True).stdout
         os.chdir(path)
         os.system(shell)
-        print('Terminal moved to new directory. IDEs are unafected, do it manually')
+        print('Terminal moved to new directory. IDEs are unaffected, do it manually')
 
 
 SetUp().execute()
