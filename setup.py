@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Tuple
+
+
+OLD_NAME = 'djocketry-boiler'
 
 
 @dataclass(frozen=True)
@@ -72,7 +76,6 @@ class File:
 
 
 class DefaultFile:
-    __OLD_PROJECT_NAME = 'djocketry-boiler'
     __new_project_name: str
     __expected_project_name_mentions: int
     __file: File
@@ -87,14 +90,14 @@ class DefaultFile:
 
     def replace_project_name(self) -> None:
         if self.__replacement_allowed():
-            self.__file.replace(old=self.__OLD_PROJECT_NAME, new=self.__new_project_name)
+            self.__file.replace(old=OLD_NAME, new=self.__new_project_name)
             print(f'{self.__file.name} edited')
 
     def __replacement_allowed(self) -> bool:
         old_name_mentions = self.__count_old_project_name_mentions()
         if old_name_mentions != self.__expected_project_name_mentions:
             yes, no = 'y', 'n'
-            message = f'{self.__file.name} should mention {self.__OLD_PROJECT_NAME} {self.__expected_project_name_mentions} times,\n' \
+            message = f'{self.__file.name} should mention {OLD_NAME} {self.__expected_project_name_mentions} times,\n' \
                       f'but only {old_name_mentions} were found.\n' \
                       f'This can cause issues, edit anyway? ({yes}/{no}) '
             answer = ''
@@ -105,7 +108,7 @@ class DefaultFile:
         return True
 
     def __count_old_project_name_mentions(self) -> int:
-        return len(re.findall(rf'{self.__OLD_PROJECT_NAME}', self.__file.content))
+        return len(re.findall(rf'{OLD_NAME}', self.__file.content))
 
 
 class PyprojectToml:
@@ -151,6 +154,7 @@ class SetUp:
         self.__project = Project.from_input()
         self.__edit_default_files()
         self.__edit_pyproject_toml()
+        self.__rename_directories()
 
     def __edit_pyproject_toml(self) -> None:
         pyproject_toml = PyprojectToml()
@@ -162,17 +166,25 @@ class SetUp:
         )
         print(f'{pyproject_toml.file_name} edited')
 
-    def __edit_default_files(self,) -> None:
+    def __edit_default_files(self) -> None:
         DefaultFile.set_new_project_name(self.__project.name)
         files = [
             DefaultFile(path='manage.py', expected_project_name_mentions=1),
             DefaultFile('docker-compose.yml', 3),
-            DefaultFile('djocketry-boiler/asgi.py', 2),
-            DefaultFile('djocketry-boiler/settings.py', 3),
-            DefaultFile('djocketry-boiler/urls.py', 1),
-            DefaultFile('djocketry-boiler/wsgi.py', 2)
+            DefaultFile(f'{OLD_NAME}/asgi.py', 2),
+            DefaultFile(f'{OLD_NAME}/settings.py', 3),
+            DefaultFile(f'{OLD_NAME}/urls.py', 1),
+            DefaultFile(f'{OLD_NAME}/wsgi.py', 2)
         ]
         [file.replace_project_name() for file in files]
+
+    def __rename_directories(self) -> None:
+        old_parent = Path(__file__).parent
+        new_parent = old_parent.parent.joinpath(self.__project.name)
+        os.rename(OLD_NAME, self.__project.name)
+        os.rename(old_parent, new_parent)
+        os.chdir(new_parent)
+        print('Directories renamed')
 
 
 SetUp().execute()
