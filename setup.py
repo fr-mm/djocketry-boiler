@@ -20,7 +20,7 @@ class Project:
         description = cls.__input('Description')
         authors = cls.__input('Authors')
         return cls(
-            name=name,
+            name=cls.__parse_name(name),
             version='0.1.0',
             description=description,
             authors=cls.__parse_authors(authors)
@@ -31,6 +31,10 @@ class Project:
         identation_size = 4
         identation = ' ' * identation_size
         return input(f'{identation}{message}: ').strip()
+
+    @staticmethod
+    def __parse_name(name: str) -> str:
+        return name.replace(' ', '-')
 
     @staticmethod
     def __parse_authors(authors: str) -> List[str]:
