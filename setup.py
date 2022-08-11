@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import re
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Tuple
@@ -185,6 +186,14 @@ class SetUp:
         os.rename(old_parent, new_parent)
         os.chdir(new_parent)
         print('Directories renamed')
+        self.__move_to_new_directory(new_parent)
+
+    @staticmethod
+    def __move_to_new_directory(path: Path) -> None:
+        shell: bytes = subprocess.run('echo $SHELL', shell=True, capture_output=True).stdout
+        os.chdir(path)
+        os.system(shell)
+        print('Terminal moved to new directory. IDEs are unafected, do it manually')
 
 
 SetUp().execute()
