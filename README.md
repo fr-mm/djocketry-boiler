@@ -1,6 +1,6 @@
 # Djocketry-boiler
 
-A boilerplate for Django-Docker-Poetry projects.  
+Boilerplate for Django-Docker-Poetry projects  
 Based on a 2020 [tutorial](https://medium.com/@samwelkanda/how-to-initialize-a-django-project-with-poetry-and-docker-ef4997006f2f) 
 by [Samwel Kanda](https://medium.com/@samwelkanda)
 
