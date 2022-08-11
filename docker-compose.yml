@@ -2,14 +2,14 @@ version: '3.10'
 
 services:
   web:
-    image: "app:dev"
+    image: "djocketry-boiler:dev"
 
     build:
       target: development_build
       context: .
       cache_from:
-        - "app:dev"
-        - "app:latest"
+        - "djocketry-boiler:dev"
+        - "djocketry-boiler:latest"
       args:
         DJANGO_ENV: development
     command: python -Wd manage.py runserver 0.0.0.0:8000
