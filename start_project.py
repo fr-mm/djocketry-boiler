@@ -172,6 +172,11 @@ class SetUp:
         self.__start_django_project()
         self.__edit_files()
         self.__build_and_run_docker_containers()
+        print(
+            f'Project build and runing'
+            f'To stop it: docker compose down'
+            f'To rerun it: docker compose up'
+        )
 
     @staticmethod
     def __go_to_root() -> None:
@@ -196,7 +201,7 @@ class SetUp:
         prefix = ''
         if sys.platform != 'win32':
             prefix = 'sudo '
-        self.__run_command(f'{prefix}docker compose up --build')
+        self.__run_command(f'{prefix}docker compose up -d --build')
 
     @staticmethod
     def __run_command(command: str) -> None:
