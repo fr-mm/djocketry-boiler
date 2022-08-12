@@ -43,7 +43,7 @@ RUN poetry install
 # copy project
 COPY . .
 
-# expose port, is this necessary?
+# expose port
 EXPOSE 8000
 
 # start server
