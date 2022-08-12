@@ -214,13 +214,13 @@ class SetUp:
             ('description', self.__project.description),
             ('authors', self.__project.authors)
         )
-        print(f'{pyproject_toml.file_name} edited')
+        print(f'pyproject.toml edited')
 
     def __edit_docker_compose(self) -> None:
         DefaultFile.set_new_project_name(self.__project.name)
         docker_compose = DefaultFile(path='docker-compose.yml', expected_project_name_mentions=3)
         docker_compose.replace_project_name()
-        print(f'{docker_compose.name} edited')
+        print(f'docker-compose.yml edited')
 
 
 SetUp().execute()
