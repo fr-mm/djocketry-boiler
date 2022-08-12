@@ -85,6 +85,10 @@ class DefaultFile:
         self.__file = File(path)
         self.__expected_project_name_mentions = expected_project_name_mentions
 
+    @property
+    def name(self) -> str:
+        return self.__file.name
+
     @classmethod
     def set_new_project_name(cls, name: str) -> None:
         cls.__new_project_name = name
@@ -156,7 +160,6 @@ class SetUp:
         self.__clear_readme()
         self.__edit_docker_compose()
         self.__edit_pyproject_toml()
-        self.__rename_directories()
 
     @staticmethod
     def __clear_readme() -> None:
@@ -177,24 +180,7 @@ class SetUp:
         DefaultFile.set_new_project_name(self.__project.name)
         docker_compose = DefaultFile(path='docker-compose.yml', expected_project_name_mentions=3)
         docker_compose.replace_project_name()
-
-    def __rename_directories(self) -> None:
-        os.rename(OLD_NAME, self.__project.name)
-        parent = Path(__file__).parent
-        print('Child directory renamed')
-        if parent.name is OLD_NAME:
-            new_parent = parent.parent.joinpath(self.__project.name)
-            os.rename(parent, new_parent)
-            os.chdir(new_parent)
-            print('Parent directory renamed')
-            self.__move_to_new_directory(new_parent)
-
-    @staticmethod
-    def __move_to_new_directory(path: Path) -> None:
-        shell: bytes = subprocess.run('echo $SHELL', shell=True, capture_output=True).stdout
-        os.chdir(path)
-        os.system(shell)
-        print('Terminal moved to new directory. IDEs are unaffected, do it manually')
+        print(f'{docker_compose.name} edited')
 
 
 SetUp().execute()
