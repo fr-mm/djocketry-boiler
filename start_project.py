@@ -10,8 +10,6 @@ from pathlib import Path
 from typing import List, Tuple
 
 
-
-
 @dataclass(frozen=True)
 class Project:
     name: str
@@ -106,7 +104,6 @@ class DefaultFile:
     def replace_project_name(self) -> None:
         if self.__replacement_allowed():
             self.__file.replace_substrings(old=self.__OLD_PROJECT_NAME, new=self.__new_project_name)
-            print(f'{self.__file.name} edited')
 
     def __replacement_allowed(self) -> bool:
         old_name_mentions = self.__count_old_project_name_mentions()
@@ -175,8 +172,8 @@ class SetUp:
         self.__delete_git_repository()
         self.__build_and_run_docker_containers()
         print(
-            f'Project build and runing'
-            f'To stop it: docker compose down'
+            f'Project build and runing\n'
+            f'To stop it: docker compose down\n'
             f'To rerun it: docker compose up'
         )
 
