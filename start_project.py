@@ -198,8 +198,10 @@ class SetUp:
 
     @staticmethod
     def __delete_git_repository() -> None:
-        shutil.rmtree('.git', ignore_errors=True)
-        print('Git repository deleted')
+        git_repository = '.git'
+        if Path(git_repository).exists():
+            shutil.rmtree(git_repository, ignore_errors=True)
+            print('Git repository deleted')
 
     @staticmethod
     def __delete_this_file() -> None:
