@@ -170,6 +170,7 @@ class SetUp:
         self.__install_dependencies()
         self.__start_django_project()
         self.__edit_files()
+        self.__build_and_run_docker_containers()
 
     @staticmethod
     def __go_to_root() -> None:
@@ -189,6 +190,9 @@ class SetUp:
         self.__clear_readme()
         self.__edit_docker_compose()
         self.__edit_pyproject_toml()
+
+    def __build_and_run_docker_containers(self) -> None:
+        self.__run_command(f'docker compose up --build')
 
     @staticmethod
     def __run_command(command: str) -> None:
