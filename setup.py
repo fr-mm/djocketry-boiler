@@ -176,12 +176,7 @@ class SetUp:
     def __edit_default_files(self) -> None:
         DefaultFile.set_new_project_name(self.__project.name)
         files = [
-            DefaultFile(path='manage.py', expected_project_name_mentions=1),
             DefaultFile('docker-compose.yml', 3),
-            DefaultFile(f'{OLD_NAME}/asgi.py', 2),
-            DefaultFile(f'{OLD_NAME}/settings.py', 3),
-            DefaultFile(f'{OLD_NAME}/urls.py', 1),
-            DefaultFile(f'{OLD_NAME}/wsgi.py', 2)
         ]
         [file.replace_project_name() for file in files]
 
