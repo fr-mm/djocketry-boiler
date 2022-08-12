@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import re
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -171,6 +172,7 @@ class SetUp:
         self.__install_dependencies()
         self.__start_django_project()
         self.__edit_files()
+        self.__delete_git_repository()
         self.__build_and_run_docker_containers()
         print(
             f'Project build and runing'
@@ -196,6 +198,16 @@ class SetUp:
         self.__clear_readme()
         self.__edit_docker_compose()
         self.__edit_pyproject_toml()
+
+    @staticmethod
+    def __delete_git_repository() -> None:
+        shutil.rmtree('.git', ignore_errors=True)
+        print('Git repository deleted')
+
+    @staticmethod
+    def __delete_this_file() -> None:
+        os.remove(__file__)
+        print('start_project stript deleted')
 
     def __build_and_run_docker_containers(self) -> None:
         prefix = ''
