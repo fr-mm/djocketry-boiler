@@ -10,11 +10,11 @@ by [Samwel Kanda](https://medium.com/@samwelkanda)
 Make sure you have compatible versions of these installed
 
 - [Python 3.10.6](https://www.python.org/downloads/release/python-3106/)
+- [Poetry 1.1.14](https://python-poetry.org/blog/announcing-poetry-1.1.14/)
 - [Docker 20.10.17](https://docs.docker.com/engine/release-notes/#201017)
 
 ## Internal 
 Docker will handle these, no need to install manually
-- [Poetry 1.1.14](https://python-poetry.org/blog/announcing-poetry-1.1.14/)
 - [Django 4.1](https://docs.djangoproject.com/en/4.1/releases/4.1/)
 - [PostgreSQL 14.4](https://www.postgresql.org/docs/current/release-14-4.html)
 
