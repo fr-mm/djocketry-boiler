@@ -193,7 +193,7 @@ class SetUp:
     @staticmethod
     def __run_command(command: str) -> None:
         process = subprocess.run(command, shell=True)
-        if process.returncode is not 0:
+        if process.returncode != 0:
             print(f'Failed to run command: {command}')
             quit()
 
