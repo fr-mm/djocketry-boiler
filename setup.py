@@ -154,7 +154,7 @@ class SetUp:
     def execute(self) -> None:
         self.__project = Project.from_input()
         self.__clear_readme()
-        self.__edit_default_files()
+        self.__edit_docker_compose()
         self.__edit_pyproject_toml()
         self.__rename_directories()
 
@@ -173,12 +173,10 @@ class SetUp:
         )
         print(f'{pyproject_toml.file_name} edited')
 
-    def __edit_default_files(self) -> None:
+    def __edit_docker_compose(self) -> None:
         DefaultFile.set_new_project_name(self.__project.name)
-        files = [
-            DefaultFile('docker-compose.yml', 3),
-        ]
-        [file.replace_project_name() for file in files]
+        docker_compose = DefaultFile(path='docker-compose.yml', expected_project_name_mentions=3)
+        docker_compose.replace_project_name()
 
     def __rename_directories(self) -> None:
         os.rename(OLD_NAME, self.__project.name)
