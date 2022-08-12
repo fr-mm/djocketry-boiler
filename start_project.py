@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import re
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Tuple
@@ -192,7 +193,10 @@ class SetUp:
         self.__edit_pyproject_toml()
 
     def __build_and_run_docker_containers(self) -> None:
-        self.__run_command(f'docker compose up --build')
+        prefix = ''
+        if sys.platform != 'win32':
+            prefix = 'sudo '
+        self.__run_command(f'{prefix}docker compose up --build')
 
     @staticmethod
     def __run_command(command: str) -> None:
