@@ -37,9 +37,17 @@ class Project:
         identation = ' ' * identation_size
         return input(f'{identation}{message}: ').strip()
 
+    @classmethod
+    def __parse_name(cls, name: str) -> str:
+        name = name.replace(' ', '-')
+        cls.__validate_name(name)
+        return name
+
     @staticmethod
-    def __parse_name(name: str) -> str:
-        return name.replace(' ', '-')
+    def __validate_name(name: str) -> None:
+        if not re.match(r'^[a-zA-Z0-9_-]*$', name):
+            print(f'Invalid name: {name}')
+            quit()
 
     @staticmethod
     def __parse_authors(authors: str) -> List[str]:
@@ -156,10 +164,38 @@ class SetUp:
     __project: Project
 
     def execute(self) -> None:
+        self.__go_to_root()
+        self.__validate_poetry_and_docker()
         self.__project = Project.from_input()
+        self.__install_dependencies()
+        self.__start_django_project()
+        self.__edit_files()
+
+    @staticmethod
+    def __go_to_root() -> None:
+        os.chdir(Path(__file__).parent)
+
+    def __validate_poetry_and_docker(self) -> None:
+        self.__run_command('poetry --version')
+        self.__run_command('docker --version')
+
+    def __install_dependencies(self) -> None:
+        self.__run_command('poetry install')
+
+    def __start_django_project(self) -> None:
+        self.__run_command(f'poetry run django-admin startproject {self.__project.name} .')
+
+    def __edit_files(self) -> None:
         self.__clear_readme()
         self.__edit_docker_compose()
         self.__edit_pyproject_toml()
+
+    @staticmethod
+    def __run_command(command: str) -> None:
+        process = subprocess.run(command, shell=True)
+        if process.returncode is not 0:
+            print(f'Failed to run command: {command}')
+            quit()
 
     @staticmethod
     def __clear_readme() -> None:
