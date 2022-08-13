@@ -172,6 +172,7 @@ class SetUp:
         self.__edit_files()
         self.__delete_git_repository()
         self.__build_and_run_docker_containers()
+        self.__delete_this_file()
         print(
             f'Project build and runing\n'
             f'To stop it: docker compose down\n'
