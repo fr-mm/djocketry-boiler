@@ -38,13 +38,14 @@ class Project:
 
     @classmethod
     def __parse_name(cls, name: str) -> str:
-        name = name.replace(' ', '-')
+        name = name.replace(' ', '_')
+        name = name.replace('-', '_')
         cls.__validate_name(name)
         return name
 
     @staticmethod
     def __validate_name(name: str) -> None:
-        if not re.match(r'^[a-zA-Z0-9_-]*$', name):
+        if not re.match(r'^[a-zA-Z0-9_]*$', name):
             print(f'Invalid name: {name}')
             quit()
 
