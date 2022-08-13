@@ -167,9 +167,10 @@ class SetUp:
         self.__go_to_root()
         self.__validate_poetry_and_docker()
         self.__project = Project.from_input()
-        self.__edit_files()
+        self.__replace_project_name_in_files()
         self.__install_dependencies()
         self.__start_django_project()
+        self.__update_db_in_django_settings()
         self.__delete_git_repository()
         self.__build_and_run_docker_containers()
         self.__delete_this_file()
@@ -193,7 +194,23 @@ class SetUp:
     def __start_django_project(self) -> None:
         self.__run_command(f'poetry run django-admin startproject {self.__project.name} .')
 
-    def __edit_files(self) -> None:
+    def __update_db_in_django_settings(self) -> None:
+        django_settings = File(f'{self.__project.name}/settings.py')
+        pattern = r'DATABASES[\w ={\'\"\n:.,()/]*}\n}'
+        old_databases = re.search(pattern, django_settings.content).group()
+        new_databases = "DATABASES = {\n" \
+                        "    'default': {\n" \
+                        "        'ENGINE': os.environ.get('SQL_ENGINE'),\n" \
+                        "        'NAME': os.environ.get('SQL_DATABASE'),\n" \
+                        "        'USER: os.environ.get('SQL_USER'),\n" \
+                        "        'PASSWORD: os.environ.get('SQL_PASSWORD'),\n" \
+                        "        'HOST': os.environ.get('SQL_HOST'),\n" \
+                        "        'PORT': os.environ.get('SQL_PORT')\n" \
+                        "    }\n" \
+                        "}"
+        django_settings.replace_substrings(old_databases, new_databases)
+
+    def __replace_project_name_in_files(self) -> None:
         self.__clear_readme()
         self.__edit_docker_compose()
         self.__edit_pyproject_toml()
